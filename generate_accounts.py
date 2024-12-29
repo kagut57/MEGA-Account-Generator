@@ -138,7 +138,7 @@ class MegaAccount:
         confirm_message = None
         for i in range(5):
             confirm_message = self.get_mail()
-            if confirm_message is not None and "MEGA account".lower() in confirm_message.lower():
+            if confirm_message is not None:
                 confirm_message = self.get_mail()
                 break
             print(f"\r> [{self.email}]: Waiting for verification email... ({i+1} of 5)", end="\033[K", flush=True)
