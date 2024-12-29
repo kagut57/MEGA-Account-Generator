@@ -93,6 +93,7 @@ class MegaAccount:
     def get_mail(self):
         """Get the latest email from the mail.tm account"""
         while True:
+            time.sleep(15)
             try:
                 message = get_message(self.scraper)
                 if message:
@@ -168,7 +169,7 @@ class MegaAccount:
             with open("accounts.csv", "a", newline='') as csvfile:
                 csvwriter = csv.writer(csvfile)
                 # last column is for purpose (to be edited manually if required)
-                csvwriter.writerow([self.email, self.password, "-", self.email_password, self.email_id, "-"])
+                csvwriter.writerow([self.email, self.password, "-", "-"])
         else:
             print("Failed to verify account. Please open an issue on github.")
 
