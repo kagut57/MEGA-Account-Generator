@@ -73,7 +73,7 @@ class MegaAccount:
         """Generate mail.tm account and return account credentials."""
         for i in range(5):
             try:
-                adress = get_tmail(self.scraper)
+                address = get_tmail(self.scraper)
             except:
                 print(f"\r> Could not get new 10minutemail.com account. Retrying ({i+1} of 5)...", end="\n")
                 sleep_output = ""
