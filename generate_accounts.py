@@ -137,7 +137,7 @@ class MegaAccount:
         confirm_message = None
         for i in range(5):
             confirm_message = self.get_mail()
-            if confirm_message is not None and "verification required".lower() in confirm_message.subject.lower():
+            if confirm_message is not None and "MEGA account".lower() in confirm_message.lower():
                 confirm_message = self.get_mail()
                 break
             print(f"\r> [{self.email}]: Waiting for verification email... ({i+1} of 5)", end="\033[K", flush=True)
@@ -148,7 +148,7 @@ class MegaAccount:
             print(f"\r> [{self.email}]: Failed to verify account. There was no verification email. Please open an issue on github.", end="\033[K", flush=True)
             exit()
 
-        links = find_url(confirm_message.text)
+        links = find_url(confirm_message)
 
         self.verify_command = str(self.verify_command).replace("@LINK@", links[0])
 
