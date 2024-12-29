@@ -2,6 +2,7 @@
 # saves credentials to a file called accounts.csv
 
 import requests
+import cloudscraper
 import subprocess
 import os
 import time
@@ -13,6 +14,7 @@ import threading
 import argparse
 import pymailtm
 from pymailtm.pymailtm import CouldNotGetAccountException, CouldNotGetMessagesException
+from tmail import get_message, get_tmail
 from faker import Faker
 fake = Faker()
 
@@ -65,15 +67,15 @@ class MegaAccount:
     def __init__(self, name, password):
         self.name = name
         self.password = password
+        self.scraper = cloudscraper.create_scraper()
 
     def generate_mail(self):
         """Generate mail.tm account and return account credentials."""
         for i in range(5):
             try:
-                mail = pymailtm.MailTm()
-                acc = mail.get_account()
-            except CouldNotGetAccountException:
-                print(f"\r> Could not get new Mail.tm account. Retrying ({i+1} of 5)...", end="\n")
+                adress = get_tmail(self.scraper)
+            except:
+                print(f"\r> Could not get new 10minutemail.com account. Retrying ({i+1} of 5)...", end="\n")
                 sleep_output = ""
                 for i in range(random.randint(8, 15)):
                     sleep_output += ". "
@@ -87,22 +89,19 @@ class MegaAccount:
             exit()
 
         self.email = acc.address
-        self.email_id = acc.id_
-        self.email_password = acc.password
 
     def get_mail(self):
         """Get the latest email from the mail.tm account"""
         while True:
             try:
-                mail = pymailtm.Account(self.email_id, self.email, self.email_password)
-                messages = mail.get_messages()
+                message = get_message(self.scraper)
                 break
-            except (CouldNotGetAccountException, CouldNotGetMessagesException):
+            except:
                 print("> Could not get latest email. Retrying...")
                 time.sleep(random.randint(5, 15))
-        if len(messages) == 0:
+        if len(message) == 0:
             return None
-        return messages[0]
+        return message
 
     def register(self):
         # Generate mail.tm account and return account credentials.
@@ -213,4 +212,3 @@ if __name__ == "__main__":
         print(f"Generating {args.number} accounts.")
         for _ in range(args.number):
             new_account()
-
