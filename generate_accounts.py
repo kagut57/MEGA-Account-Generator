@@ -95,13 +95,13 @@ class MegaAccount:
         while True:
             try:
                 message = get_message(self.scraper)
-                break
+                if message:
+                    return message
+                else:
+                    time.sleep(random.randint(5, 15))
             except:
                 print("> Could not get latest email. Retrying...")
                 time.sleep(random.randint(5, 15))
-        if len(message) == 0:
-            return None
-        return message
 
     def register(self):
         # Generate mail.tm account and return account credentials.
