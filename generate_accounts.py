@@ -88,7 +88,7 @@ class MegaAccount:
             print("Please wait 5 minutes and try again with a lower number of accounts/threads.")
             exit()
 
-        self.email = acc.address
+        self.email = address
 
     def get_mail(self):
         """Get the latest email from the mail.tm account"""
