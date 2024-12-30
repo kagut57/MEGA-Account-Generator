@@ -126,26 +126,37 @@ class MegaAccount:
 
     def verify(self):
         """Handle verification by checking email and confirming registration."""
-        print(f"Waiting for verification email for {self.email}")
+        print(f"> Waiting for verification email for {self.email}")
         confirm_message = None
         for i in range(5):
             confirm_message = self.get_mail()
             if confirm_message:
                 break
-            print(f"Waiting for verification email... ({i+1} of 5)")
+            print(f"> Waiting for verification email... ({i+1} of 5)")
             time.sleep(5)
 
         if not confirm_message:
             print(f"Failed to verify account for {self.email}. No verification email received.")
             return False
 
-        links = find_url(confirm_message)
+        links = find_url(confirm_message)  # Extract the URL from the email
         if not links:
             print(f"No verification link found in email for {self.email}.")
             return False
 
-        print(f"Verification link found for {self.email}. Completing registration.")
-        return True
+        print(f"> Verification link found for {self.email}. Completing registration.")
+
+        # Replace @LINK@ with the actual verification link
+        self.verify_command = self.verify_command.replace("@LINK@", links[0])
+
+        try:
+            subprocess.run(self.verify_command, shell=True, check=True, stdout=subprocess.PIPE)
+            print(f"Account successfully verified for {self.email}!")
+            print(f"Email: {self.email}, Password: {self.password}")
+            return True
+        except subprocess.CalledProcessError as e:
+            print(f"Failed to verify account for {self.email}: {e}")
+            return False
 
 def new_account():
     password = args.password or get_random_string(random.randint(8, 14))
