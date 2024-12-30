@@ -93,7 +93,7 @@ class MegaAccount:
 
         try:
             if self.use_megareg:
-                subprocess.run(
+                registration =subprocess.run(
                     [
                         "megareg",
                         "--scripted",
@@ -105,7 +105,7 @@ class MegaAccount:
                     check=True,
                 )
             elif self.use_megatools:
-                subprocess.run(
+                registration = subprocess.run(
                     [
                         "megatools",
                         "reg",
@@ -117,6 +117,7 @@ class MegaAccount:
                     ],
                     check=True,
                 )
+            self.verify_command = registration.stdout
         except subprocess.CalledProcessError as e:
             print(f"Failed to register account for {self.email}: {e}")
             return False
